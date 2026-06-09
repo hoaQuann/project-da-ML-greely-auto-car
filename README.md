@@ -36,23 +36,34 @@
 ### 2. Data Dictionary
 A detailed data dictionary will be generated upon loading the specific dataset. Below is an example structure for anticipated columns:
 
-| **Column Name** | **Description**                                  | **Data Type** | **Encoding / Notes**                                     |
-| :-------------- | :----------------------------------------------- | :------------ | :------------------------------------------------------- |
-| `make`          | Car manufacturer                                 | `object`      | Likely 'Greely Auto' or similar for this specific dataset |
-| `model`         | Specific car model                               | `object`      |                                                          |
-| `fuel_type`     | Type of fuel used (e.g., gasoline, diesel, EV)   | `object`      | Categorical                                              |
-| `horsepower`    | Engine horsepower                                | `int`         | Numeric, `hp`                                            |
-| `engine_size`   | Size of the engine in cubic inches or liters     | `int`/`float` | Numeric, `cc` or `L`                                     |
-| `num_doors`     | Number of doors (e.g., two, four)                | `object`      | Categorical, will be converted to numeric                |
-| `body_style`    | Type of car body (e.g., sedan, SUV, hatchback)   | `object`      | Categorical                                              |
-| `wheel_base`    | Distance between the centers of the front and rear wheels | `float`       | Numeric, `inches`                                        |
-| `length`        | Overall length of the car                        | `float`       | Numeric, `inches`                                        |
-| `width`         | Overall width of the car                         | `float`       | Numeric, `inches`                                        |
-| `height`        | Overall height of the car                        | `float`       | Numeric, `inches`                                        |
-| `curb_weight`   | Weight of the car without occupants or cargo     | `int`         | Numeric, `lbs`                                           |
-| `city_mpg`      | Miles per gallon in city driving                 | `int`         | Numeric, `mpg`                                           |
-| `highway_mpg`   | Miles per gallon in highway driving              | `int`         | Numeric, `mpg`                                           |
-| `price`         | **Target Variable:** Selling price of the car    | `int`         | Numeric, `USD`                                           |
+| **Column Name** | **Description** | **Data Type** | **Encoding / Notes** |
+| :---------------- | :---------------------------------------------- | :------------ | :------------------------------------------------------------------------------------------------- |
+| `car_ID` | Unique identifier for each car | `Integer` | Primary Key. Should be **dropped** before Machine Learning modeling. |
+| `symboling` | Insurance risk rating | `Integer` | +3 indicates high risk, -3 indicates safe. Ordinal nature. |
+| `CarName` | Name of the car company and model | `String` | High Cardinality. Needs Feature Engineering (e.g., split into `Brand` and `Model`) to be useful for ML. |
+| `wheelbase` | Distance between front and rear axles | `Float` | Continuous numerical feature. Needs scaling (Standard/MinMax). |
+| `carlength` | Overall length of the car | `Float` | Continuous numerical feature. Needs scaling. |
+| `carwidth` | Overall width of the car | `Float` | Continuous numerical feature. Needs scaling. |
+| `carheight` | Overall height of the car | `Float` | Continuous numerical feature. Needs scaling. |
+| `curbweight` | Weight of the car without occupants or baggage | `Integer` | Heavier cars usually cost more. Needs scaling. |
+| `doornumber` | Number of doors | `String (Category)` | Values: 'two', 'four'. Convert to Integer (2, 4) or use Binary Encoding. |
+| `carbody` | Type of car body | `String (Category)` | Values: convertible, hatchback, sedan, wagon, hardtop. Use One-Hot Encoding. |
+| `enginetype` | Type of engine | `String (Category)` | Values: OHC, DOHC, ohcv, etc. Use One-Hot Encoding. |
+| `cylindernumber` | Number of cylinders | `String (Category)` | Values: four, six, eight, twelve, etc. Convert from words to Integers (4, 6, 8, 12). |
+| `fuelsystem` | Fuel injection/delivery system | `String (Category)` | Values: mpfi, 2bbl, mfi, etc. Use One-Hot Encoding. |
+| `fueltype` | Type of fuel used | `String (Category)` | Values: 'gas' (gasoline) or 'diesel'. Use Binary Encoding (0/1). |
+| `aspiration` | Engine aspiration method | `String (Category)` | Values: 'std' (standard) or 'turbo'. Use Binary Encoding (0/1). |
+| `enginelocation` | Location of the engine in the car | `String (Category)` | Values: 'front' or 'rear'. Use Binary Encoding. Note: 'rear' is rare and correlates with high price. |
+| `drivewheel` | Type of drive wheel | `String (Category)` | Values: 'fwd' (front), 'rwd' (rear), '4wd' (4-wheel). Use One-Hot Encoding. |
+| `enginesize` | Size/displacement of the engine | `Integer` | **Strong positive correlation** with price expected. Needs scaling. |
+| `boreratio` | Stroke to bore ratio of the cylinders | `Float` | Continuous numerical feature. Needs scaling. |
+| `stroke` | Volume of the engine (stroke) | `Float` | Continuous numerical feature. Needs scaling. |
+| `compressionratio` | Compression ratio of the engine | `Float` | Continuous numerical feature. Needs scaling. |
+| `horsepower` | Engine horsepower | `Integer` | **Strong positive correlation** with price expected. Needs scaling. |
+| `peakrpm` | Peak revolutions per minute | `Integer` | Continuous numerical feature. Needs scaling. |
+| `citympg` | Miles per gallon in city driving | `Integer` | Fuel efficiency. Usually has a **negative correlation** with price/weight. Needs scaling. |
+| `highwaympg` | Miles per gallon on highway driving | `Integer` | Fuel efficiency. Needs scaling. |
+| `price` | Price of the car | `Float` | **Target Variable (Label).** Continuous numeric value for Regression modeling. |
 
 ### 3. Feature Engineering based on Domain Knowledge
 This step will involve creating new features from existing ones to potentially improve model performance and capture more complex relationships within the data.
